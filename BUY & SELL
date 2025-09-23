@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flipkart-like Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+
+        .options {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .options button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            margin: 0 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .options button:hover {
+            background-color: #0056b3;
+        }
+
+        section {
+            margin-top: 30px;
+        }
+
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .product-card {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin: 10px;
+            width: 250px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .product-card h3 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .product-card p {
+            color: #666;
+        }
+
+        .product-card button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .product-card button:hover {
+            background-color: #218838;
+        }
+
+        form input, form button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        form button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        .sell-section, .buy-section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to Flipkart-like Platform</h1>
+
+        <!-- Options to Buy or Sell -->
+        <div class="options">
+            <button onclick="showBuySection()">Buy Products</button>
+            <button onclick="showSellSection()">Sell Products</button>
+        </div>
+
+        <!-- Buy Section -->
+        <section class="buy-section" id="buy-section">
+            <h2>Available Products</h2>
+            <div class="product-list" id="product-list">
+                <!-- Products will be displayed here dynamically -->
+            </div>
+        </section>
+
+        <!-- Sell Section -->
+        <section class="sell-section" id="sell-section">
+            <h2>Sell Your Product</h2>
+            <form id="sell-form">
+                <input type="text" id="product-name" placeholder="Product Name" required />
+                <input type="text" id="product-description" placeholder="Product Description" required />
+                <input type="number" id="product-price" placeholder="Price" required />
+                <input type="text" id="product-seller" placeholder="Your Name" required />
+                <button type="submit">Add Product</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        let products = [];
+
+        // Function to show the Buy section and hide Sell section
+        function showBuySection() {
+            document.getElementById('buy-section').style.display = 'block';
+            document.getElementById('sell-section').style.display = 'none';
+            displayProducts();
+        }
+
+        // Function to show the Sell section and hide Buy section
+        function showSellSection() {
+            document.getElementById('sell-section').style.display = 'block';
+            document.getElementById('buy-section').style.display = 'none';
+        }
+
+        // Function to display products in the Buy section
+        function displayProducts() {
+            const productList = document.getElementById("product-list");
+            productList.innerHTML = "";  // Clear the previous list of products
+
+            // Loop through all the products and create product cards
+            products.forEach((product, index) => {
+                const productCard = document.createElement("div");
+                productCard.className = "product-card";
+
+                productCard.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <p><strong>$${product.price}</strong></p>
+                    <p><em>Seller: ${product.seller}</em></p>
+                    <button onclick="buyProduct(${index})">Buy</button>
+                `;
+
+                productList.appendChild(productCard);
+            });
+        }
+
+        // Handle the Sell form submission
+        document.getElementById("sell-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById("product-name").value;
+            const description = document.getElementById("product-description").value;
+            const price = document.getElementById("product-price").value;
+            const seller = document.getElementById("product-seller").value;
+
+            // Create a new product object and add it to the products array
+            const newProduct = {
+                name,
+                description,
+                price,
+                seller
+            };
+
+            products.push(newProduct);
+
+            // Clear the form
+            document.getElementById("sell-form").reset();
+
+            // Switch to Buy section and display the updated list of products
+            showBuySection();
+        });
+
+        // Function to handle buying a product
+        function buyProduct(index) {
+            const product = products[index];
+            products.splice(index, 1);  // Remove the product from the products list
+
+            alert(`You bought ${product.name} for $${product.price}`);
+            displayProducts();  // Refresh the product list after purchase
+        }
+
+        // Initial display (show Buy section by default)
+        showBuySection();
+    </script>
+
+</body>
+</html>
